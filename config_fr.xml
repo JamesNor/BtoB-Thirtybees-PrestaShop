@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>gsbtobs</name>
+	<displayName><![CDATA[B2B by Glass-Systems]]></displayName>
+	<version><![CDATA[0.2]]></version>
+	<description><![CDATA[With this module, you can create a B2B shop on Prestashop !]]></description>
+	<author><![CDATA[Glass Systems]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
