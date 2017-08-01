@@ -36,6 +36,6 @@ Installation (FR)
 
 * Clonez le dépôt et installez le module en utilisant le zip gsbtob.zip dans votre [PrestaShop][2] / [Thirtybees][3] 1.6
 
-[1]: https://github.com/JamesNor/BtoB-Thirtybees-PrestaShop/blob/master/gsbtobs.zip
+[1]: https://github.com/JamesNor/BtoB-Thirtybees-PrestaShop/raw/master/gsbtobs.zip
 [2]: https://www.prestashop.com/fr/versions-precedentes
 [3]: https://thirtybees.com/download/
