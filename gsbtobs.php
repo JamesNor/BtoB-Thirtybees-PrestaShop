@@ -11,7 +11,7 @@ class GsBtobs extends Module
     {
         $this->name = 'gsbtobs';
         $this->tab = 'administration';
-        $this->version = '0.2';
+        $this->version = '0.2.1';
         $this->author = 'Glass Systems';
         $this->bootstrap = true;
         parent::__construct();

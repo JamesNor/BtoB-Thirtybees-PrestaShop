@@ -49,35 +49,30 @@ class AdminParticuliersController extends ModuleAdminController
             'postal_code' => array('title' => $this->l('Code Postal'), 'width' => 60),
             'ville' => array('title' => $this->l('Ville'), 'width' => 100),
             'pays' => array('title' => $this->l('Pays'), 'width' => 100),
-            'commentaire' => array('title' => $this->l('Commentaire'), 'width' => 120, 'type' => 'select', 'list' => $listEmployeView, 'filter_key' => 'employe'),
-            'date_add' => array('title' => $this->l('Date add'), 'type' => 'date'),
+            'commentaire' => array('title' => $this->l('Commentaire'), 'width' => 120, 'type' => 'text'),
+            'date_add' => array('title' => $this->l('Date add'), 'type' => 'datetime'),
         );
 
         // Set fields form for form view
         $this->context = Context::getContext();
         $this->context->controller = $this;
         $this->fields_form = array(
-            'legend' => array('title' => $this->l('Entreprise'), 'icon' => 'icon-briefcase'),
+            'legend' => array('title' => $this->l('Particulier'), 'icon' => 'icon-user'),
             'input' => array(
-              array('type' => 'text', 'label' => $this->l('Nom'), 'name' => 'name', 'required' => true, 'class' => 'gs-md', 'hint' => 'Caractères invalides :  0-9!<>,;?=+()@#"°{}_$%:'),
-              array('type' => 'free', 'name' => 'a', 'desc' => $this->l('Les informations de contact de l\'entreprise'), 'class' => 'gs-md'),
+              array('type' => 'text', 'label' => $this->l('Prénom'), 'name' => 'firstname', 'class' => 'gs-md', 'hint' => 'Caractères invalides:<br>0-9!<>,;?=+()@#"°{}_$%:'),
+              array('type' => 'text', 'label' => $this->l('Nom'), 'name' => 'lastname', 'required' => true, 'class' => 'gs-md', 'hint' => 'Caractères invalides:<br>0-9!<>,;?=+()@#"°{}_$%:'),
+              array('type' => 'free', 'name' => 'a', 'desc' => $this->l('Les informations de contact du particulier'), 'class' => 'gs-md'),
               array('type' => 'text', 'label' => $this->l('Tél'), 'name' => 'tel', 'class' => 'gs-md'),
-              array('type' => 'text', 'label' => $this->l('Fax'), 'name' => 'fax', 'class' => 'gs-md'),
+              array('type' => 'text', 'label' => $this->l('Mobile'), 'name' => 'mobile', 'required' => true, 'class' => 'gs-md'),
               array('type' => 'text', 'label' => $this->l('E-mail'), 'name' => 'email', 'class' => 'gs-md'),
               array('type' => 'text', 'label' => $this->l('Site web'), 'name' => 'website', 'class' => 'gs-md'),
-              array('type' => 'switch', 'label' => $this->l('Client'), 'name' => 'status', 'class' => 'gs-md', 'is_bool' => true, 'desc' => $this->l('Légende : Client <--> Prospe'),
-                                            'values' => array(
-                                              array('id' => 'status_client', 'value' => 1,'label' => $this->l('Client')),
-                                              array('id' => 'status_prospe', 'value' => 0, 'label' => $this->l('Prospe')),
-                                            ),),
-              //array('type' => 'textarea', 'label' => $this->l('Commentaire'), 'name' => 'commentaire', 'class' => 'gs-md'),
-              array('type' => 'free', 'name' => 'a', 'desc' => $this->l('L\'adresse de l\'entreprise'), 'class' => 'gs-md'),
-              array('type' => 'text', 'label' => $this->l('Adresse'), 'name' => 'address', 'class' => 'gs-md'),
-              array('type' => 'text', 'label' => $this->l('Code Postal'), 'name' => 'postal_code', 'class' => 'gs-md'),
-              array('type' => 'text', 'label' => $this->l('Ville'), 'name' => 'ville', 'class' => 'gs-md'),
-              array('type' => 'text', 'label' => $this->l('Pays'), 'name' => 'pays', 'class' => 'gs-md'),
-
-              array('type' => 'select', 'label' => $this->l('Commercial interne'), 'name' => 'employe', 'class' => 'gs-md', 'options' => array('query' => $optionsEmploye, 'id' => 'id_option', 'name' => 'name')),
+              array('type' => 'free', 'name' => 'a', 'desc' => $this->l('L\'adresse du particulier'), 'class' => 'gs-md'),
+              array('type' => 'text', 'label' => $this->l('Adresse'), 'name' => 'address', 'class' => 'gs-md', 'hint' => 'Caractères invalides:<br>!<>?=+@{}_$%'),
+              array('type' => 'text', 'label' => $this->l('Code Postal'), 'name' => 'postal_code', 'required' => true, 'class' => 'gs-md'),
+              array('type' => 'text', 'label' => $this->l('Ville'), 'name' => 'ville', 'class' => 'gs-md', 'hint' => 'Caractères invalides:<br>!<>;?=+@#"°{}_$%'),
+              array('type' => 'text', 'label' => $this->l('Pays'), 'name' => 'pays', 'class' => 'gs-md', 'hint' => 'Caractères valides:<br>a-zA-Z -'),
+              array('type' => 'free', 'name' => 'a', 'desc' => $this->l('Informations complémentaires'), 'class' => 'gs-md'),
+              array('type' => 'textarea', 'label' => $this->l('Commentaire'), 'name' => 'commentaire', 'class' => 'gs-md'),
             ),
             'submit' => array('title' => $this->l('Save'))
         );
@@ -95,6 +90,24 @@ class AdminParticuliersController extends ModuleAdminController
         $this->addRowAction('edit');
         $this->addRowAction('view');
 
+    }
+
+    public function renderView()
+    {
+      // Build edit link
+      $admin_edit_link = $this->context->link->getAdminLink('AdminGsBtobs').'&updategsbtob&id_gsbtob='.(int)$this->object->id;
+
+      // Add edit shortcut button to toolbar
+      $this->page_header_toolbar_btn['edit'] = array(
+        'href' => $admin_edit_link,
+        'desc' => $this->l('L\'éditer'),
+        'icon' => 'process-icon-edit',
+      );
+
+      $tpl = $this->context->smarty->createTemplate(dirname(__FILE__). '/../../views/templates/admin/viewParticulier.tpl');
+      $tpl->assign('particulier', $this->object);
+
+      return $tpl->fetch();
     }
 
     public function initPageHeaderToolbar()
@@ -130,7 +143,7 @@ class AdminParticuliersController extends ModuleAdminController
           case '':
           case 'list':
               array_pop($this->toolbar_title);
-              $this->toolbar_title[] = $this->l('Gérer vos Contacts particuliers');
+              $this->toolbar_title[] = $this->l('Gérer vos contacts Particuliers');
               break;
           case 'view':
               /** @var Customer $customer */
@@ -154,5 +167,27 @@ class AdminParticuliersController extends ModuleAdminController
         if (count($this->toolbar_title) > 0) {
             $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
         }
+    }
+
+    /**
+     * postProcess handle every checks before saving products information
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function postProcess()
+    {
+      if (!$this->redirect_after) {
+          parent::postProcess();
+      }
+
+      if ($this->display == 'edit' || $this->display == 'add') {
+        $this->addCSS(
+          [
+              dirname(__FILE__). '/../../views/css/gsbtobs.css',
+          ]
+        );
+      }
     }
   }

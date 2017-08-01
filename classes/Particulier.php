@@ -91,7 +91,7 @@ class Particulier extends ObjectModel
           'postal_code' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 255),
           'ville' => array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'size' => 255),
           'pays' => array('type' => self::TYPE_STRING, 'validate' => 'isCountryName', 'size' => 255),
-          'commentaire' => array('type' => self::TYPE_HTML, 'validate' => 'isString', 'size' => 65535),
+          'commentaire' => array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 65535),
           'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
         ),
     );

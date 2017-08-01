@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS `PREFIX_gsbtob` (
 
 CREATE TABLE IF NOT EXISTS `PREFIX_particulier` (
   `id_particulier` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(255) NOT NULL,
-  `lastname` varchar(255),
+  `firstname` varchar(255),
+  `lastname` varchar(255) NOT NULL,
   `tel` varchar(32),
-  `mobile` varchar(32),
+  `mobile` varchar(32) NOT NULL,
   `email` varchar(255),
   `website` varchar(255),
   `address` varchar(255),
-  `postal_code` varchar(255),
+  `postal_code` varchar(255) NOT NULL,
   `ville` varchar(255),
   `pays` varchar(255),
   `commentaire` text,

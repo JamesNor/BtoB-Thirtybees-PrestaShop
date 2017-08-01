@@ -162,7 +162,7 @@ class AdminGsBtobsController extends ModuleAdminController
 
         $action_url = $this->context->link->getAdminLink('AdminGsBtobs');
         $employe_url = $this->context->link->getAdminLink('AdminEmployees');
-        $tpl = $this->context->smarty->createTemplate(dirname(__FILE__). '/../../views/templates/admin/view.tpl');
+        $tpl = $this->context->smarty->createTemplate(dirname(__FILE__). '/../../views/templates/admin/viewBtob.tpl');
 
         // If author is known as a customer, build admin customer link
         $admin_customer_link = '';
@@ -177,7 +177,7 @@ class AdminGsBtobsController extends ModuleAdminController
         //var_dump($customersById);
         $tpl->assign('companies', $companies);
         $tpl->assign('accessories', $accessories);
-        $tpl->assign('toto', Configuration::get('GS_ENABLE'));
+        $tpl->assign('enable', Configuration::get('GS_ENABLE'));
         $tpl->assign('action_url', $action_url);
         $tpl->assign('employe_url', $employe_url);
         $tpl->assign('admin_customer_link', $admin_customer_link);
