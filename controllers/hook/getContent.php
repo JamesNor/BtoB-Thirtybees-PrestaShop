@@ -14,9 +14,13 @@ class GsbtobsGetContentController
 		if (Tools::isSubmit('mymod_pc_form'))
 		{
 			$enable_module = Tools::getValue('enable_module');
-			$enable_comments = Tools::getValue('enable_comments');
 			Configuration::updateValue('GS_ENABLE', $enable_module);
-			Configuration::updateValue('GS_COMMENTS', $enable_comments);
+			if ($enable_module) {
+				Tab::enablingForModule($this->module->name);
+			} else {
+				Tab::disablingForModule($this->module->name);
+			}
+
 			$this->context->smarty->assign('confirmation', 'ok');
 		}
 	}
@@ -26,29 +30,19 @@ class GsbtobsGetContentController
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
-					'title' => $this->module->l('My Module configuration'),
+					'title' => $this->module->l('Configuration du module B2B'),
 					'icon' => 'icon-briefcase'
 				),
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->module->l('Enable module:'),
+						'label' => $this->module->l('Activer le module:'),
 						'name' => 'enable_module',
-						'desc' => $this->module->l('Enable module'),
+						'desc' => $this->module->l('Activation du module'),
 						'values' => array(
 							array('id' => 'enable_module_1', 'value' => 1, 'label' => $this->module->l('Enabled')),
 							array('id' => 'enable_module_0', 'value' => 0, 'label' => $this->module->l('Disabled'))
 						),
-					),
-					array(
-						'type' => 'switch',
-						'label' => $this->module->l('Enable comments:'), 'name' => 'enable_comments',
-						'desc' => $this->module->l('Enable comments on products.'),
-						'values' => array(
-							array('id' => 'enable_comments_1', 'value' => 1, 'label' => $this->module->l('Enabled')),
-							array('id' => 'enable_comments_0', 'value' => 0, 'label' => $this->module->l('Disabled'))
-						),
-
 					),
 				),
 				'submit' => array('title' => $this->module->l('Save'))
@@ -65,7 +59,6 @@ class GsbtobsGetContentController
 		$helper->tpl_vars = array(
 			'fields_value' => array(
 				'enable_module' => Tools::getValue('enable_module', Configuration::get('GS_ENABLE')),
-				'enable_comments' => Tools::getValue('enable_comments', Configuration::get('GS_COMMENTS')),
 			),
 			'languages' => $this->context->controller->getLanguages()
 		);

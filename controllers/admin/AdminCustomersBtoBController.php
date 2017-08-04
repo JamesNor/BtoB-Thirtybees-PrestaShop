@@ -29,6 +29,8 @@
  *  PrestaShop is an internationally registered trademark & property of PrestaShop SA
  */
 
+require_once(dirname(__FILE__).'/../../classes/GsBtob.php');
+
 /**
  * Class AdminCustomersBtoBController
  *
@@ -64,7 +66,6 @@ class AdminCustomersBtoBController extends ModuleAdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('view');
-        $this->addRowAction('delete');
         $this->bulk_actions = [
             'delete' => [
                 'text'    => $this->l('Delete selected'),
@@ -82,6 +83,13 @@ class AdminCustomersBtoBController extends ModuleAdminController
         foreach ($genders as $gender) {
             /** @var Gender $gender */
             $titlesArray[$gender->id_gender] = $gender->name;
+        }
+
+        $companyArray = [];
+        $companies = GsBtob::getCompagny();
+        //var_dump($companies);
+        foreach ($companies as $company) {
+          $companyArray[$company['id_gsbtob']] = $company['name'];
         }
 
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (a.id_gender = gl.id_gender AND gl.id_lang = '.(int) $this->context->language->id.')';
@@ -108,6 +116,7 @@ class AdminCustomersBtoBController extends ModuleAdminController
             ],
             'email'       => [
                 'title' => $this->l('Email address'),
+                'filter_key' => 'a!email',
             ],
         ];
 
@@ -121,6 +130,19 @@ class AdminCustomersBtoBController extends ModuleAdminController
                 ]
             );
         }
+        $this->fields_list = array_merge(
+          $this->fields_list,
+          [
+            'company_name' => [
+              'title'       => $this->l('Company'),
+              // 'type'        => 'text',
+              // 'list'        => $companyArray,
+              'filter_key'  => 'gsb!name',
+              // 'filter_type' => 'int',
+              // 'order_key'   => 'gsb!name',
+            ],
+        ]
+      );
 
         $this->fields_list = array_merge(
             $this->fields_list,
@@ -175,20 +197,21 @@ class AdminCustomersBtoBController extends ModuleAdminController
         parent::__construct();
 
         $this->_select = '
-        a.date_add, gl.name as title, (
+        a.`date_add`, gl.`name` as title, (
             SELECT SUM(total_paid_real / conversion_rate)
-            FROM '._DB_PREFIX_.'orders o
-            WHERE o.id_customer = a.id_customer
+            FROM `'._DB_PREFIX_.'orders` o
+            WHERE o.`id_customer` = a.`id_customer`
             '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-            AND o.valid = 1
+            AND o.`valid` = 1
         ) as total_spent, (
-            SELECT c.date_add FROM '._DB_PREFIX_.'guest g
-            LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
-            WHERE g.id_customer = a.id_customer
-            ORDER BY c.date_add DESC
+            SELECT c.`date_add` FROM `'._DB_PREFIX_.'guest` g
+            LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.`id_guest` = g.`id_guest`
+            WHERE g.`id_customer` = a.`id_customer`
+            ORDER BY c.`date_add` DESC
             LIMIT 1
-        ) as connect';
+        ) as connect, gsb.`name` as `company_name`';
 
+        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'gsbtob` gsb ON (gsb.`id_gsbtob` = a.`id_company`)';
         // Check if we can add a customer
         if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP)) {
             $this->can_add_customer = false;
@@ -656,7 +679,48 @@ class AdminCustomersBtoBController extends ModuleAdminController
                 ],
             ]
         );
-
+        $companyArray = [];
+        $companies = GsBtob::getCompagny();
+        //var_dump($companies);
+        foreach ($companies as $company) {
+          $companyArray[$company['id_gsbtob']] = array(
+            'id_company' => $company['id_gsbtob'],
+            'name' => $company['name'],
+          );
+        }
+        $this->fields_form['input'] = array_merge(
+          $this->fields_form['input'],
+          [
+            /*[
+              'type'    => 'select',
+              'label'   => $this->l('Company'),
+              'name'    => 'companies',
+              'options' => [
+                'query'   => $companyArray,
+                'id'      => 'id_company',
+                'name'    => 'name',
+              ],
+              'col'     => '4',
+            ],*/
+            [
+              'type'    => 'text',
+              'label'   => $this->l('Company'),
+              'name'    => 'companies2',
+              'col'     => '4',
+            ],
+            [
+                'type'    => 'select',
+                'label'   => $this->l('Company'),
+                'name'    => 'id_company',
+                'class'   => 'chosen',
+                'options' => [
+                    'query' => $companyArray,
+                    'id'    => 'id_company',
+                    'name'  => 'name',
+                ],
+            ],
+          ]
+        );
         // if customer is a guest customer, password hasn't to be there
         if ($obj->id && ($obj->is_guest && $obj->id_default_group == Configuration::get('PS_GUEST_GROUP'))) {
             foreach ($this->fields_form['input'] as $k => $field) {
@@ -782,14 +846,14 @@ class AdminCustomersBtoBController extends ModuleAdminController
      *
      * @since 1.0.0
      */
-    public function renderKpis()
+    /*public function renderKpis()
     {
         $time = time();
-        $kpis = [];
+        $kpis = [];*/
 
         /* The data generation is located in AdminStatsControllerCore */
 
-        $helper = new HelperKpi();
+        /*$helper = new HelperKpi();
         $helper->id = 'box-gender';
         $helper->icon = 'icon-male';
         $helper->color = 'color1';
@@ -845,7 +909,7 @@ class AdminCustomersBtoBController extends ModuleAdminController
         $helper->kpis = $kpis;
 
         return $helper->generate();
-    }
+    }*/
 
     /**
      * Render view
@@ -1043,8 +1107,15 @@ class AdminCustomersBtoBController extends ModuleAdminController
             'referrers'              => $referrers,
             'show_toolbar'           => true,
         ];
+        $action_url = $this->context->link->getAdminLink('AdminCustomersBtoB');
 
-        return parent::renderView();
+        $tpl = $this->context->smarty->createTemplate(dirname(__FILE__). '/../../views/templates/admin/viewCustomerBtoB.tpl');
+        foreach ($this->tpl_view_vars as $key => $value) {
+          $tpl->assign($key, $value);
+        }
+        $tpl->assign('current',$action_url);
+        $tpl->assign('token',"");
+        return $tpl->fetch();
     }
 
     /**

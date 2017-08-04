@@ -171,10 +171,11 @@ class AdminGsBtobsController extends ModuleAdminController
         if (isset($customers[0]['id_customer']) && isset($customersById[0]['id_customer'])) {
             $admin_customer_link = $this->context->link->getAdminLink('AdminCustomers').'&viewcustomer&id_customer='.(int)$customers[0]['id_customer'];
             $tpl->assign('customers', $customersById);
+        } else {
+          $tpl->assign('customers', "");
         }
 
         $tpl->assign('gsbtob', $this->object);
-        //var_dump($customersById);
         $tpl->assign('companies', $companies);
         $tpl->assign('accessories', $accessories);
         $tpl->assign('enable', Configuration::get('GS_ENABLE'));
@@ -270,7 +271,7 @@ class AdminGsBtobsController extends ModuleAdminController
 
         if ($this->display == 'edit') {
 
-          $this->fields_form['input'][] = array('type' => 'free', 'desc' => $this->l('Informations complémentaires de l\'entreprise'), 'class' => 'gs-md');
+          $this->fields_form['input'][] = array('type' => 'free', 'name' => 'a', 'desc' => $this->l('Informations complémentaires de l\'entreprise'), 'class' => 'gs-md');
           $this->fields_form['input'][] = array('type' => 'text', 'label' => $this->l('SIRET'), 'name' => 'siret', 'class' => 'gs-md');
           $this->fields_form['input'][] = array('type' => 'text', 'label' => $this->l('TVA Type'), 'name' => 'tva_type', 'class' => 'gs-md', 'hint' => 'Caractères invalides : <>={}');
           $this->fields_form['input'][] = array('type' => 'text', 'label' => $this->l('TVA Number'), 'name' => 'tva_number', 'class' => 'gs-md', 'hint' => 'Caractères invalides : <>={}');

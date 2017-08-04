@@ -2,7 +2,7 @@
 <module>
 	<name>gsbtob</name>
 	<displayName><![CDATA[B2B by Glass-Systems]]></displayName>
-	<version><![CDATA[0.2.1]]></version>
+	<version><![CDATA[0.4]]></version>
 	<description><![CDATA[With this module, you can create a B2B shop on Prestashop !]]></description>
 	<author><![CDATA[Glass Systems]]></author>
 	<tab><![CDATA[administration]]></tab>

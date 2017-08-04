@@ -29,7 +29,20 @@
  */
 class Customer extends CustomerCore
 {
-  /** @var int $id_compagny Compagny ID */
-  public $id_compagny;
+  /**
+  * Redefine __construct to add one field in $definition
+  *
+  * @param int $id_company
+  *
+  * @since 0.4
+  */
+  public function __construct($id_customer = null)
+  {
+      self::$definition['fields']['id_company'] = array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId');
+	    parent::__construct($id_customer);
+  }
+
+  /** @var int $id_company Company ID */
+  public $id_company;
 
 }

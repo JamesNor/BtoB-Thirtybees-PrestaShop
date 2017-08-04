@@ -154,7 +154,7 @@ class GsBtob extends ObjectModel
      *
      * @since 0.1
      */
-    public function getCustomerByIdCompany($idCompany)
+    public static function getCustomerByIdCompany($idCompany)
     {
       $limit = 100;
 

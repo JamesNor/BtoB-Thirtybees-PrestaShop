@@ -167,14 +167,16 @@
         </tr>
       </thead>
       <tbody>
+        {if $customers ne ""}
         {foreach from=$customers item=customer}
         <tr>
           <td>{$customer['lastname']} {$customer['firstname']}</td>
           <td>{$customer['id_gender']}</td>
           <td>{$customer['email']}</td>
-          <td>{$customer->pays}</td>
+          <td>{$customer['id_company']}</td>
         </tr>
         {/foreach}
+        {/if}
       </tbody>
     </table>
   </div>

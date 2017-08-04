@@ -11,7 +11,7 @@ class GsBtobs extends Module
     {
         $this->name = 'gsbtobs';
         $this->tab = 'administration';
-        $this->version = '0.2.1';
+        $this->version = '0.4';
         $this->author = 'Glass Systems';
         $this->bootstrap = true;
         parent::__construct();
@@ -33,6 +33,7 @@ class GsBtobs extends Module
 
         //Installation d'un nouvel onglet d'administration
         if (!$this->installTab('', 'AdminParentCompanies', 'B2B')
+          || !$this->installTab('AdminParentCompanies', 'AdminDashboardBtoB', 'Dashboard')
           || !$this->installTab('AdminParentCompanies', 'AdminGsBtobs', 'Entreprise')
           || !$this->installTab('AdminParentCompanies', 'AdminCustomersBtoB', 'Contact')
           || !$this->installTab('AdminParentCompanies', 'AdminParticuliers', 'Particulier')) {
@@ -47,7 +48,6 @@ class GsBtobs extends Module
 
         // Preset configuration values
         Configuration::updateValue('GS_ENABLE', '1');
-        Configuration::updateValue('GS_COMMENTS', '1');
 
         // All went well!
         return true;
@@ -67,14 +67,15 @@ class GsBtobs extends Module
               return false;*/
 
         if (!$this->uninstallTab('AdminParentCompanies')
+          || !$this->uninstallTab('AdminDashboardBtoB')
           || !$this->uninstallTab('AdminGsBtobs')
-          || !$this->uninstallTab('AdminCustomersBtoB')) {
+          || !$this->uninstallTab('AdminCustomersBtoB')
+          || !$this->uninstallTab('AdminParticuliers')) {
             return false;
         }
 
         // Delete configuration values
         Configuration::deleteByName('GS_ENABLE');
-        Configuration::deleteByName('GS_COMMENTS');
 
         // All went well!
         return true;
